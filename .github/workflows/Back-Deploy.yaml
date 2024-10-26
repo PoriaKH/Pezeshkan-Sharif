@@ -1,0 +1,29 @@
+name: Back-end Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - tahlil_back/**
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: tahlil_back
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      - name: Install Liara
+        run: |
+          npm i -g @liara/cli@4
+      - name: Deploy
+        env:
+          LIARA_TOKEN: ${{ secrets.LIARA_API_TOKEN }}
+        run: liara deploy --api-token="$LIARA_TOKEN" --app="pezeshkan-sharif" --port=443 --detach
